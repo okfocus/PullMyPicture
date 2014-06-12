@@ -40,14 +40,29 @@
 	<meta name="author" content="OKFocus" />
 	<meta property="og:title" content="Pull My Picture!"/>
 	<meta property="og:type" content="website"/>
-	<meta property="og:image" content="http://okfoc.us/assets/images/ok_icon.png" />
+	<meta property="og:image" content="http://www.pullmypicture.com/img/apple-touch-icon-144x144.png" />
 	<meta property="og:url" content="http://pullmypicture.com"/>
 	<meta property="og:site_name" content="Pull My Picture!" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<link rel="shortcut icon" href="http://okfoc.us/assets/images/favicon.ico"/>
-	<link rel="image_src" href="http://okfoc.us/assets/images/ok_icon.png"/>
+	<link rel="apple-touch-icon-precomposed" sizes="57x57" href="http://www.pullmypicture.com/img/apple-touch-icon-57x57.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://www.pullmypicture.com/img/apple-touch-icon-114x114.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://www.pullmypicture.com/img/apple-touch-icon-72x72.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://www.pullmypicture.com/img/apple-touch-icon-144x144.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="60x60" href="http://www.pullmypicture.com/img/apple-touch-icon-60x60.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="120x120" href="http://www.pullmypicture.com/img/apple-touch-icon-120x120.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="76x76" href="http://www.pullmypicture.com/img/apple-touch-icon-76x76.png" />
+	<link rel="icon" type="image/png" href="http://www.pullmypicture.com/img/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="http://www.pullmypicture.com/img/favicon-32x32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="http://www.pullmypicture.com/img/favicon-16x16.png" sizes="16x16" />
+	<link rel="icon" type="image/png" href="http://www.pullmypicture.com/img/favicon-128.png" sizes="128x128" />
+	<meta name="application-name" content="Pull My Picture!"/>
+	<meta name="msapplication-TileColor" content="#FFFFFF" />
+	<meta name="msapplication-TileImage" content="http://www.pullmypicture.com/img/mstile-144x144.png" />
+	<meta name="msapplication-square70x70logo" content="http://www.pullmypicture.com/img/mstile-70x70.png" />
+	<meta name="msapplication-square150x150logo" content="http://www.pullmypicture.com/img/mstile-150x150.png" />
+	
 	<style>
 	*, *:before, *:after {
 		-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
@@ -70,12 +85,12 @@
 		position:absolute;
 		width:200px;
 		height:200px;
-		background:url(cursor.png)no-repeat top left;
+		background:url(img/cursor.png)no-repeat top left;
 		z-index:5;
 		pointer-events:none;
 	}
 	body:active #cursor {
-		background:url(cursor2.png)no-repeat top left;
+		background:url(img/cursor2.png)no-repeat top left;
 	}
 
 	#photos {
@@ -141,7 +156,7 @@
 	}
 	/* arrow icon */
 	#pullrefresh .icon.arrow {
-		background: url(arrow.png) no-repeat;
+		background: url(img/arrow.png) no-repeat;
 		width: 71px;
 		height: 28px;
 		bottom: 10px;
@@ -176,7 +191,7 @@
 @-webkit-keyframes rotate{ 0%{ -webkit-transform: rotate(0deg); } 100%{ -webkit-transform: rotate(360deg); } }
 
 #pullrefresh .icon.loading {
-	background: url(spinner.png) no-repeat;
+	background: url(img/spinner.png) no-repeat;
 	width: 19px;
 	height: 19px;
 	background-size: 100%;
