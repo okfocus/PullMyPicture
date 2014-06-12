@@ -1,0 +1,525 @@
+<!doctype html>
+<html>
+<head>
+	<title>PullMyPicture</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="keywords" content="okfocus,ok focus,ryder ripps,jules laplace,paul bouchon,digital agency,okfocus.com,internet legends"/>
+	<meta name="description" content="OKFocus, Internet Legends" />
+	<meta name="author" content="OKFocus" />
+	<meta property="og:title" content="OKFocus"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:image" content="http://okfoc.us/assets/images/ok_icon.png" />
+	<meta property="og:url" content="http://okfoc.us"/>
+	<meta property="og:site_name" content="OKFocus" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="shortcut icon" href="http://okfoc.us/assets/images/favicon.ico"/>
+	<link rel="image_src" href="http://okfoc.us/assets/images/ok_icon.png"/>
+	<style>
+	*, *:before, *:after {
+		-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+		-webkit-user-select: none; 
+	  -moz-user-select: none;  
+	  -ms-user-select: none;   
+	  -o-user-select: none;
+	  user-select: none;
+	}
+	html,body{
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		font-family: sans-serif;
+		overflow:hidden;
+	}
+
+	#cursor {
+		position:absolute;
+		width:200px;
+		height:200px;
+		background:url(cursor.png)no-repeat top left;
+		z-index:5;
+		pointer-events:none;
+	}
+	body:active #cursor {
+		background:url(cursor2.png)no-repeat top left;
+	}
+
+	#photos {
+		width: 100%;
+	}
+	#photos div {
+		width: 100%;
+		height: 300px;
+		background-position: center;
+	}
+	#container {
+		position:absolute;
+		width:100%;
+		height:100%;
+		background-size:contain;
+		background-position:center;
+		-webkit-transition: -webkit-transform 0ms;
+		transform: translate3d(0,0,0) scale3d(1,1,1);
+		-o-transform: translate3d(0,0,0) scale3d(1,1,1);
+		-ms-transform: translate3d(0,0,0) scale3d(1,1,1);
+		-moz-transform: translate3d(0,0,0) scale3d(1,1,1);
+		-webkit-transform: translate3d(0,0,0) scale3d(1,1,1);
+		-webkit-backface-visibility: hidden;
+		cursor:none;
+
+	}
+	#container.pullrefresh-slideup,
+	#container.pullrefresh-loading {
+		-o-transition: -o-transform .3s;
+		-ms-transition: -ms-transform .3s;
+		-moz-transition: -moz-transform .3s;
+		-webkit-transition: -webkit-transform .3s;
+	}
+	#pullrefresh {
+		display: block;
+		overflow: hidden;
+		position: absolute;
+		top: -490px;
+		left: 0;
+		width: 100%;
+		height: 490px;
+		background: #ccc;
+		box-shadow: 0 -5px 20px #999 inset;
+		font-family:arial;
+		font-weight:bold;
+	}
+	#pullrefresh .message {
+		position: absolute;
+		left: 0;
+		bottom: 20px;
+		right: 0;
+		color: #777;
+		text-align: center;
+		text-shadow: 1px 1px 0 #dfdfdf;
+		font-weight: bold;
+	}
+	#pullrefresh .message span:after { content: "Pull to refresh..."; }
+	.pullrefresh-breakpoint #pullrefresh .message span:after { content: "Release to refresh..."; }
+	.pullrefresh-loading #pullrefresh .message span:after { content: "Loading new image..."; }
+	#pullrefresh .icon {
+		position: absolute;
+		left: 20px;
+	}
+	/* arrow icon */
+	#pullrefresh .icon.arrow {
+		background: url(arrow.png) no-repeat;
+		width: 71px;
+		height: 28px;
+		bottom: 10px;
+
+		transform: rotate(90deg);
+		transition: transform .3s;
+		-o-transform: rotate(90deg);
+		-o-transition: -o-transform .3s;
+		-ms-transform: rotate(90deg);
+		-ms-transition: -ms-transform .3s;
+		-moz-transform: rotate(90deg);
+		-moz-transition: -moz-transform .3s;
+		-webkit-transform: rotate(90deg);
+		-webkit-transition: -webkit-transform .3s;
+		-webkit-backface-visibility: hidden;
+	}
+
+	#pullrefresh .icon.arrow.arrow-up {
+		transform: rotate(-90deg);
+		-o-transform: rotate(-90deg);
+		-ms-transform: rotate(-90deg);
+		-moz-transform: rotate(-90deg);
+		-webkit-transform: rotate(-90deg);
+	}
+
+/* spinner icon */
+/* rotate spinner with css animation */
+@keyframes rotate{ 0%{ transform: rotate(0deg); } 100%{ transform: rotate(360deg); } }
+@-o-keyframes rotate{ 0%{ -o-transform: rotate(0deg); } 100%{ -o-transform: rotate(360deg); } }
+@-ms-keyframes rotate{ 0%{ -ms-transform: rotate(0deg); } 100%{ -ms-transform: rotate(360deg); } }
+@-moz-keyframes rotate{ 0%{ -moz-transform: rotate(0deg); } 100%{ -moz-transform: rotate(360deg); } }
+@-webkit-keyframes rotate{ 0%{ -webkit-transform: rotate(0deg); } 100%{ -webkit-transform: rotate(360deg); } }
+
+#pullrefresh .icon.loading {
+	background: url(spinner.png) no-repeat;
+	width: 19px;
+	height: 19px;
+	background-size: 100%;
+	bottom: 0;
+
+	animation: rotate 1s linear infinite;
+	-o-animation: rotate 1s linear infinite;
+	-ms-animation: rotate 1s linear infinite;
+	-moz-animation: rotate 1s linear infinite;
+	-webkit-animation: rotate 1s linear infinite;
+}
+#info {
+	position: absolute;
+	bottom: 40px;
+	font-size: 12px;
+	background: rgba(255,255,255,0.9);
+	width: 340px;
+	text-align: center;
+	padding: 10px;
+	left: 50%;
+	margin-left: -170px;
+	font-weight: 100;
+	border-radius: 3px;
+}
+.mobile #info {
+	bottom:0;
+	width:100%;
+	margin-left:0;
+	left:0;
+	border-radius:0;
+}
+.mobile #container {
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-color: #f9f9f9;
+	background-position: 0px 20%;
+
+}
+.mobile #cursor {
+	display:none;
+}
+
+.imageLink {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+a {
+	color:black;
+}
+</style>
+</head>
+<body>
+	<div id="container">
+		<div id="pullrefresh">
+			<div class="message">
+				<div id="pullrefresh-icon" class="icon arrow arrow-down"></div>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<div id="info">
+		<a href="https://farm4.staticflickr.com/3919/14207612238_599b287046.jpg" target="_blank" class="imageLink"></a><br>
+		Pull this page down to get a random photo with a <a href="http://creativecommons.org/" target="_blank">Creative Commons</a> license, feel free to use these images in any capacity. Pull images, have a good time.<br><br>Site by <a href="http://okfoc.us">OKFocus</a>
+	</div>
+	<div id="cursor"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="hammer.js"></script>
+<script src="modernizr.js"></script>
+<script>
+var is_iphone = (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)),
+is_ipad = (navigator.userAgent.match(/iPad/i)),
+is_android = (navigator.userAgent.match(/Android/i)),
+is_mobile = is_iphone || is_ipad || is_android;
+$("html").addClass(is_mobile ? "mobile" : "desktop");
+
+function fetch () {
+	// var tags = "hand face bomb gun".split(" ")
+	var sorts = "interestingness-desc".split(" ")
+	var min_year = randrange(1980,2013)
+	var max_year = randrange(min_year,2014)
+	var req = $.ajax({
+		url: "//api.flickr.com/services/rest/",
+		data: {
+			method: 'flickr.photos.search',
+			api_key: '5160d849303c5b513e70cf7b20c9c390',
+			// tags: choice(tags),
+			sort: rand(sorts),
+			license: "5,6,7",
+			min_taken_date: (min_year) + '-01-01 00:00:00',
+			max_taken_date: (max_year) + '-06-01 00:00:00',
+			page: rand(100),
+			media: 'photos',
+			format: 'json',
+		},
+		jsonp: "jsonFlickrApi",
+		dataType: "jsonp",
+	})
+}
+
+function rand(n){return Math.random()*n|0 }
+function choice(a){ return a[rand(a.length)] }
+function randrange(a,b){ return rand(b-a) + a }
+function shuffle(a){
+	for (var i = a.length; i > 0; i--){
+		var r = rand(i)
+		var swap = a[i-1]
+		a[i-1] = a[r]
+		a[r] = swap
+	}
+	return a
+}
+
+var photos, started = false
+function jsonFlickrApi (data){
+	var $photos = $("#photos")
+	photos = shuffle(data.photos.photo)
+	$("body,html").scrollTop(0)
+	if (! started) {
+		refresh.handler()
+	}
+	started = true
+}
+var count = 0
+function next_image() {
+	var photo = photos.pop()
+	count++
+	if (photos.length < 5 || (count % 10) == 0) {
+		fetch()
+	}
+	return photo
+}
+
+function link_url (photo) {
+	return "https://www.flickr.com/photos/" + photo.owner + "/" + photo.id
+}
+function photo_url (photo) {
+	return[
+	"https://farm",
+	photo.farm,
+	".staticflickr.com/",
+	photo.server,
+	"/",
+	photo.id,
+	"_",
+	photo.secret,
+	"_b",
+	".jpg"
+	].join("")
+}
+
+
+/**
+* pull to refresh
+* @type {*}
+*/
+var PullToRefresh = (function() {
+	function Main(container, slidebox, slidebox_icon, handler) {
+		var self = this;
+
+		this.breakpoint = 80;
+
+		this.container = container;
+		this.slidebox = slidebox;
+		this.slidebox_icon = slidebox_icon;
+		this.handler = handler;
+
+		this._slidedown_height = 0;
+		this._anim = null;
+		this._dragged_down = false;
+
+		this.hammertime = Hammer(this.container)
+		.on("touch dragdown release", function(ev) {
+			self.handleHammer(ev);
+		});
+	}
+
+	Main.prototype.handleHammer = function(ev) {
+		var self = this;
+
+		switch(ev.type) {
+			// reset element on start
+			case 'touch':
+			this.hide();
+			break;
+
+			// on release we check how far we dragged
+			case 'release':
+			if(!this._dragged_down) {
+				return;
+			}
+
+			// cancel animation
+			cancelAnimationFrame(this._anim);
+
+			// over the breakpoint, trigger the callback
+			if(ev.gesture.deltaY >= this.breakpoint) {
+				container_el.className = 'pullrefresh-loading';
+				pullrefresh_icon_el.className = 'icon loading';
+
+				this.setHeight(60);
+				this.handler.call(this);
+			}
+			// just hide it
+			else {
+				pullrefresh_el.className = 'slideup';
+				container_el.className = 'pullrefresh-slideup';
+
+				this.hide();
+			}
+			break;
+
+			// when we dragdown
+			case 'dragdown':
+			// if we are not at the top move down
+			var scrollY = window.scrollY;
+			if(scrollY > 5) {
+				return;
+			} else if(scrollY !== 0) {
+				window.scrollTo(0,0);
+			}
+
+			this._dragged_down = true;
+
+			// no requestAnimationFrame instance is running, start one
+			if(!this._anim) {
+				this.updateHeight();
+			}
+
+			// stop browser scrolling
+			ev.gesture.preventDefault();
+
+			// update slidedown height
+			// it will be updated when requestAnimationFrame is called
+			this._slidedown_height = ev.gesture.deltaY * 0.4;
+			break;
+		}
+	};
+
+
+	/**
+	* when we set the height, we just change the container y
+	* @param   {Number}    height
+	*/
+	Main.prototype.setHeight = function(height) {
+		if(Modernizr.csstransforms3d) {
+			this.container.style.transform = 'translate3d(0,'+height+'px,0) ';
+			this.container.style.oTransform = 'translate3d(0,'+height+'px,0)';
+			this.container.style.msTransform = 'translate3d(0,'+height+'px,0)';
+			this.container.style.mozTransform = 'translate3d(0,'+height+'px,0)';
+			this.container.style.webkitTransform = 'translate3d(0,'+height+'px,0) scale3d(1,1,1)';
+		}
+		else if(Modernizr.csstransforms) {
+			this.container.style.transform = 'translate(0,'+height+'px) ';
+			this.container.style.oTransform = 'translate(0,'+height+'px)';
+			this.container.style.msTransform = 'translate(0,'+height+'px)';
+			this.container.style.mozTransform = 'translate(0,'+height+'px)';
+			this.container.style.webkitTransform = 'translate(0,'+height+'px)';
+		}
+		else {
+			this.container.style.top = height+"px";
+		}
+	};
+
+
+	/**
+	* hide the pullrefresh message and reset the vars
+	*/
+	Main.prototype.hide = function() {
+		container_el.className = '';
+		this._slidedown_height = 0;
+		this.setHeight(0);
+		cancelAnimationFrame(this._anim);
+		this._anim = null;
+		this._dragged_down = false;
+	};
+
+
+	/**
+	* hide the pullrefresh message and reset the vars
+	*/
+	Main.prototype.slideUp = function() {
+		var self = this;
+		cancelAnimationFrame(this._anim);
+
+		pullrefresh_el.className = 'slideup';
+		container_el.className = 'pullrefresh-slideup';
+
+		this.setHeight(0);
+
+		setTimeout(function() {
+			self.hide();
+			}, 500);
+		};
+
+
+		/**
+		* update the height of the slidedown message
+		*/
+		Main.prototype.updateHeight = function() {
+			var self = this;
+
+			this.setHeight(this._slidedown_height);
+
+			if(this._slidedown_height >= this.breakpoint){
+				this.slidebox.className = 'breakpoint';
+				this.slidebox_icon.className = 'icon arrow arrow-up';
+			}
+			else {
+				this.slidebox.className = '';
+				this.slidebox_icon.className = 'icon arrow';
+			}
+
+			this._anim = requestAnimationFrame(function() {
+				self.updateHeight();
+			});
+		};
+
+		return Main;
+		})();
+
+
+
+		function getEl(id) {
+			return document.getElementById(id);
+		}
+
+		var container_el = getEl('container');
+		var pullrefresh_el = getEl('pullrefresh');
+		var pullrefresh_icon_el = getEl('pullrefresh-icon');
+		var image_el = getEl('random-image');
+
+		var refresh = new PullToRefresh(container_el, pullrefresh_el, pullrefresh_icon_el);
+
+		// update image onrefresh
+		refresh.handler = function() {
+			if (! photos.length) {
+				self.slideUp();
+				return
+			}
+			var self = this;
+			var photo = next_image()
+			var preload = new Image();
+			preload.onload = function() {
+				$("#container").css("background-image", "url(" + preload.src + ")");
+				$(".imageLink").attr("href", link_url(photo)).html(link_url(photo))
+				self.slideUp();
+			};
+
+			preload.src = photo_url(photo)
+			if (preload.complete) {
+				preload.onload()
+			}
+		}
+
+		$(document).on('mousemove', function(e){
+			$('#cursor').css({
+				left:  e.pageX - 50,
+				top:   e.pageY - 50
+			});
+			$( "#info" ).mouseenter(function() {
+				$( cursor ).hide();
+			});
+			$( "#info" ).mouseleave(function() {
+				$( cursor ).show();
+			});
+		});
+
+		fetch()
+
+		</script>
+		<img src="cursor2.png" style="position:fixed;opacity:0;left:-40000000%;top:-100000%">
+		</html>
